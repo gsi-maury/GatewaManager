@@ -9,8 +9,6 @@ import org.springframework.hateoas.ResourceSupport;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class GatewayResource extends ResourceSupport {
     private String serialNumber;
     private String name;
