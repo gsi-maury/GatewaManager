@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.*;
+import static com.gateways.manager.gateway.MockProvider.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,7 +26,7 @@ public class GatewayServiceTest {
     @Test
     public void saveGatewayShouldSaveAGateway() {
         Gateway gateway = Gateway.builder().serialNumber("1111").name("Name")
-                .iPv4(getIPv4()).build();
+                .iPv4(getNewIPv4()).build();
         gatewayService.saveGateway(gateway);
         assertThat(gatewayRepository.getOne(gateway.getSerialNumber()).getSerialNumber())
                 .isEqualTo(gateway.getSerialNumber());
@@ -40,7 +41,7 @@ public class GatewayServiceTest {
 
     @Test
     public void saveGatewayWhenNameIsNullShouldThrowIllegalArgumentException() {
-        Gateway gateway = Gateway.builder().iPv4(getIPv4()).serialNumber("123").build();
+        Gateway gateway = Gateway.builder().iPv4(getNewIPv4()).serialNumber("123").build();
 
         assertThatThrownBy(()-> gatewayService.saveGateway(gateway))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -49,7 +50,7 @@ public class GatewayServiceTest {
 
     @Test
     public void saveGatewayWhenSerialNumberIsNullShouldThrowIllegalArgumentException() {
-        Gateway gateway = Gateway.builder().iPv4(getIPv4()).name("Name").build();
+        Gateway gateway = Gateway.builder().iPv4(getNewIPv4()).name("Name").build();
 
         assertThatThrownBy(()-> gatewayService.saveGateway(gateway))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -67,7 +68,7 @@ public class GatewayServiceTest {
 
     @Test
     public void getGatewayShouldGetAGateway() {
-        Gateway gateway = Gateway.builder().serialNumber("111").name("Name").iPv4(getIPv4()).build();
+        Gateway gateway = Gateway.builder().serialNumber("111").name("Name").iPv4(getNewIPv4()).build();
         gatewayService.saveGateway(gateway);
 
         assertThat(gatewayService.getGateway(gateway.getSerialNumber()).isPresent()).isTrue();
@@ -85,9 +86,5 @@ public class GatewayServiceTest {
         assertThatThrownBy(()-> gatewayService.getGateway(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("SerialNumber must not be null");
-    }
-
-    private IPv4Address getIPv4() {
-        return new IPv4Address("1.1.1.111");
     }
 }
