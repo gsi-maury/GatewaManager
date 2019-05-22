@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Optional;
+
 @Service
 public class GatewayServiceImpl implements GatewayService {
 
@@ -24,5 +26,12 @@ public class GatewayServiceImpl implements GatewayService {
         Assert.notNull(gateway.getSerialNumber(), "SerialNumber must not be null");
 
         return gatewayRepository.save(gateway);
+    }
+
+    @Override
+    public Optional<Gateway> getGateway(String serialNumber) {
+        Assert.notNull(serialNumber, "SerialNumber must not be null");
+
+        return gatewayRepository.findById(serialNumber);
     }
 }

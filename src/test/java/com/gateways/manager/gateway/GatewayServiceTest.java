@@ -65,8 +65,29 @@ public class GatewayServiceTest {
                 .hasMessage("IPv4 must not be null");
     }
 
+    @Test
+    public void getGatewayShouldGetAGateway() {
+        Gateway gateway = Gateway.builder().serialNumber("111").name("Name").iPv4(getIPv4()).build();
+        gatewayService.saveGateway(gateway);
+
+        assertThat(gatewayService.getGateway(gateway.getSerialNumber()).isPresent()).isTrue();
+        assertThat(gatewayService.getGateway(gateway.getSerialNumber()).get().getSerialNumber())
+                .isEqualTo(gateway.getSerialNumber());
+    }
+
+    @Test
+    public void getGatewayWhenGatewayNotExistShouldAEmptyOptional() {
+        assertThat(gatewayService.getGateway("1234").isPresent()).isFalse();
+    }
+
+    @Test
+    public void getGatewayWhenSerialNumberIsNullShouldThrowIllegalArgumentException() {
+        assertThatThrownBy(()-> gatewayService.getGateway(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("SerialNumber must not be null");
+    }
+
     private IPv4Address getIPv4() {
         return new IPv4Address("1.1.1.111");
     }
-
 }
